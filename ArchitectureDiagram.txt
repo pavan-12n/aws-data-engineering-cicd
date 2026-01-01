@@ -1,0 +1,49 @@
+Projcet-4   ----   CI/CD Pipeline
+
+
+┌────────────────────┐
+│  Developer (Local) │
+└─────────┬──────────┘
+          │ git push
+          ▼
+┌────────────────────────────┐
+│ GitHub Repository           │
+│ ────────────────────────── │
+│ feature/* → Dev             │
+│ develop   → Staging         │
+│ main      → Production      │
+└─────────┬──────────────────┘
+          │ Webhook trigger
+          ▼
+┌────────────────────────────┐
+│ AWS CodePipeline            │
+│ (CI/CD Orchestrator)        │
+└─────────┬──────────────────┘
+          │
+          ▼
+┌────────────────────────────┐
+│ AWS CodeBuild (CI Stage)    │
+│ ─ Run tests                 │
+│ ─ Lint CF templates         │
+│ ─ Package Lambda & Glue     │
+└─────────┬──────────────────┘
+          │ build artifacts
+          ▼
+┌────────────────────────────┐
+│ Amazon S3 (Artifact Bucket) │
+└─────────┬──────────────────┘
+          │ same artifact
+          ▼
+┌─────────────────────────────────────────────────────┐
+│ AWS CloudFormation (CD Stage)                        │
+│ ────────────────────────────────────────────────── │
+│ Dev Stack     → Glue (Dev), Lambda (Dev)             │
+│ Staging Stack → Glue (Stage), Lambda (Stage)         │
+│ Prod Stack    → Glue (Prod), Lambda (Prod)           │
+└─────────┬───────────────────────────────────────────┘
+          │
+          ▼
+┌────────────────────────────┐
+│ CloudWatch + SNS            │
+│ (Monitoring & Alerts)      │
+└────────────────────────────┘
