@@ -1,1 +1,2 @@
 # aws-data-engineering-cicd
+This project demonstrates how to build a production‑ready CI/CD pipeline for AWS data engineering workloads using GitHub, AWS CodePipeline, CodeBuild, and CloudFormation. The pipeline builds artifacts once and deploys them consistently across Dev, Staging, and Production environments, managing AWS Glue jobs and Lambda functions with full environment isolation, testing, approvals, and monitoring.
