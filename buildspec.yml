@@ -3,20 +3,11 @@ version: 0.2
 phases:
   build:
     commands:
-      - echo "Starting build phase"
+      - echo "=== CURRENT DIRECTORY ==="
       - pwd
+
+      - echo "=== FULL FILE TREE ==="
       - ls -R
 
-      - echo "Creating artifact directories"
-      - mkdir -p artifacts/glue artifacts/lambda
-
-      - echo "Copying Glue job"
-      - cp glue/jobs/sample_glue_job.py artifacts/glue/
-
-      - echo "Packaging Lambda"
-      - zip -j artifacts/lambda/sample_lambda.zip lambda/functions/sample_lambda.py
-
-artifacts:
-  base-directory: artifacts
-  files:
-    - "**/*"
+      - echo "=== SEARCHING FOR GLUE FILE ==="
+      - find . -name "sample_glue_job.py"
