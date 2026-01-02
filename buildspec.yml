@@ -1,0 +1,34 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - echo "Installing dependencies"
+      - pip install -r requirements.txt -t .
+
+  pre_build:
+    commands:
+      - echo "Pre-build phase (no tests for now)"
+
+  build:
+    commands:
+      - echo "Packaging Glue and Lambda code"
+
+      # Create artifact folders
+      - mkdir -p artifacts/glue artifacts/lambda
+
+      # Copy Glue job script
+      - cp glue/jobs/sample_glue_job.py artifacts/glue/
+
+      # Zip Lambda code (IMPORTANT)
+      - cd lambda/functions
+      - zip -r sample_lambda.zip sample_lambda.py
+      - cd ../../
+      - mv lambda/functions/sample_lambda.zip artifacts/lambda/
+
+artifacts:
+  files:
+    - artifacts/**/*
+  discard-paths: no
