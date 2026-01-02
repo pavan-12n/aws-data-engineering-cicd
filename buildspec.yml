@@ -3,25 +3,25 @@ version: 0.2
 phases:
   build:
     commands:
-      - echo "PWD:"
+      - echo "WORKDIR:"
       - pwd
-      - echo "LIST ALL FILES:"
+      - echo "FILES:"
       - ls -R
 
       - mkdir -p artifacts/glue artifacts/lambda
 
       - echo "Finding Glue job"
       - |
-        find . -name "sample_glue_job.py"
         GLUE_FILE=$(find . -name "sample_glue_job.py" | head -n 1)
-        [ -z "$GLUE_FILE" ] && echo "Glue not found" && exit 1
+        echo "Glue file: $GLUE_FILE"
+        [ -z "$GLUE_FILE" ] && exit 1
         cp "$GLUE_FILE" artifacts/glue/
 
-      - echo "Finding Lambda job"
+      - echo "Finding Lambda file"
       - |
-        find . -name "sample_lambda.py"
         LAMBDA_FILE=$(find . -name "sample_lambda.py" | head -n 1)
-        [ -z "$LAMBDA_FILE" ] && echo "Lambda not found" && exit 1
+        echo "Lambda file: $LAMBDA_FILE"
+        [ -z "$LAMBDA_FILE" ] && exit 1
         zip -j artifacts/lambda/sample_lambda.zip "$LAMBDA_FILE"
 
 artifacts:
