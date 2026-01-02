@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Glue and Lambda resources for DEV environment
+
+Resources:
+
+  DevGlueJob:
+    Type: AWS::Glue::Job
+    Properties:
+      Name: dev-sample-glue-job
+      Role: arn:aws:iam::814724283102:role/AWSGlueServiceRoleDefault
+      Command:
+        Name: glueetl
+        ScriptLocation: s3://aws-data-engineering-ci-artifacts/artifacts/glue/sample_glue_job.py
+        PythonVersion: "3"
+      GlueVersion: "4.0"
+      MaxCapacity: 2.0
+
+  DevLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: dev-sample-lambda
+      Runtime: python3.9
+      Role: arn:aws:iam::814724283102:role/service-role/lambda-basic-execution
+      Handler: sample_lambda.lambda_handler
+      Code:
+        S3Bucket: aws-data-engineering-ci-artifacts
+        S3Key: artifacts/lambda/sample_lambda.py
+      Timeout: 60
+      MemorySize: 128
