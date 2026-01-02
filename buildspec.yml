@@ -3,23 +3,22 @@ version: 0.2
 phases:
   build:
     commands:
-      - echo "Preparing artifacts"
-
-      # Debug (IMPORTANT)
+      - echo "Current directory"
       - pwd
+
+      - echo "Listing files"
       - ls -R
 
-      # Create artifact dirs
+      - echo "Creating artifact directories"
       - mkdir -p artifacts/glue artifacts/lambda
 
-      # Glue
+      - echo "Copying Glue job"
       - cp glue/jobs/sample_glue_job.py artifacts/glue/
 
-      # Lambda ZIP (ABSOLUTE & SAFE)
+      - echo "Zipping Lambda code"
       - zip -j artifacts/lambda/sample_lambda.zip lambda/functions/sample_lambda.py
 
 artifacts:
   base-directory: artifacts
   files:
     - "**/*"
-  discard-paths: no
