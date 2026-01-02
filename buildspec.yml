@@ -3,32 +3,33 @@ version: 0.2
 phases:
   build:
     commands:
-      - echo "CODEBUILD_SRC_DIR = $CODEBUILD_SRC_DIR"
+      - echo "=== CODEBUILD SRC DIR ==="
+      - echo $CODEBUILD_SRC_DIR
 
-      - echo "Listing source root"
-      - ls -R $CODEBUILD_SRC_DIR
+      - echo "=== FULL DIRECTORY TREE ==="
+      - ls -R
 
       - echo "Creating artifact directories"
       - mkdir -p artifacts/glue artifacts/lambda
 
-      - echo "Finding Glue job file"
+      - echo "Searching for Glue job"
       - |
-        GLUE_FILE=$(find $CODEBUILD_SRC_DIR -name "sample_glue_job.py" | head -n 1)
+        GLUE_FILE=$(find . -type f -name "sample_glue_job.py" | head -n 1)
         if [ -z "$GLUE_FILE" ]; then
-          echo "ERROR: sample_glue_job.py not found"
+          echo "ERROR: Glue job not found"
           exit 1
         fi
-        echo "Found Glue file at $GLUE_FILE"
+        echo "Glue file found at: $GLUE_FILE"
         cp "$GLUE_FILE" artifacts/glue/
 
-      - echo "Finding Lambda file"
+      - echo "Searching for Lambda file"
       - |
-        LAMBDA_FILE=$(find $CODEBUILD_SRC_DIR -name "sample_lambda.py" | head -n 1)
+        LAMBDA_FILE=$(find . -type f -name "sample_lambda.py" | head -n 1)
         if [ -z "$LAMBDA_FILE" ]; then
-          echo "ERROR: sample_lambda.py not found"
+          echo "ERROR: Lambda file not found"
           exit 1
         fi
-        echo "Found Lambda file at $LAMBDA_FILE"
+        echo "Lambda file found at: $LAMBDA_FILE"
         zip -j artifacts/lambda/sample_lambda.zip "$LAMBDA_FILE"
 
 artifacts:
