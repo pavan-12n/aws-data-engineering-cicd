@@ -1,25 +1,23 @@
 version: 0.2
 
 phases:
-  install:
-    runtime-versions:
-      python: 3.9
-    commands:
-      - echo "Installing dependencies"
-      - pip install -r requirements.txt
-
-  pre_build:
-    commands:
-      - echo "Running tests"
-      - pytest || echo "No tests found"
-
   build:
     commands:
-      - echo "Packaging Glue and Lambda code"
+      - echo "CODEBUILD_SRC_DIR = $CODEBUILD_SRC_DIR"
+      - echo "Listing source directory"
+      - ls -R $CODEBUILD_SRC_DIR
+
+      - echo "Creating artifact directories"
       - mkdir -p artifacts/glue artifacts/lambda
-      - cp -r glue/jobs/* artifacts/glue/
-      - cp -r lambda/functions/* artifacts/lambda/
+
+      - echo "Copying Glue job"
+      - cp $CODEBUILD_SRC_DIR/glue/jobs/sample_glue_job.py artifacts/glue/
+
+      - echo "Zipping Lambda code"
+      - zip -j artifacts/lambda/sample_lambda.zip \
+        $CODEBUILD_SRC_DIR/lambda/functions/sample_lambda.py
 
 artifacts:
+  base-directory: artifacts
   files:
-    - artifacts/**/*
+    - "**/*"
