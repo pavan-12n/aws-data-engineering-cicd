@@ -6,7 +6,7 @@ Resources:
     Type: AWS::Glue::Job
     Properties:
       Name: dev-sample-glue-job
-      Role: arn:aws:iam::814724283102:role/AWSGlueServiceRoleDefault
+      Role: AWSGlueServiceRoleDefault
       Command:
         Name: glueetl
         ScriptLocation: s3://aws-data-engineering-ci-artifacts/artifacts/glue/sample_glue_job.py
@@ -19,10 +19,10 @@ Resources:
     Properties:
       FunctionName: dev-sample-lambda
       Runtime: python3.9
-      Role: arn:aws:iam::814724283102:role/service-role/lambda-basic-execution
+      Role: arn:aws:iam::814724283102:role/lambda-basic-execution
       Handler: sample_lambda.lambda_handler
       Code:
         S3Bucket: aws-data-engineering-ci-artifacts
-        S3Key: artifacts/lambda/sample_lambda.py
+        S3Key: artifacts/lambda/sample_lambda.zip
       Timeout: 60
       MemorySize: 128
