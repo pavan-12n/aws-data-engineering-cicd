@@ -3,20 +3,20 @@ version: 0.2
 phases:
   build:
     commands:
-      - echo "Current directory"
-      - pwd
+      - echo "CODEBUILD_SRC_DIR is:"
+      - echo $CODEBUILD_SRC_DIR
 
-      - echo "Listing files"
-      - ls -R
+      - echo "Listing source directory"
+      - ls -R $CODEBUILD_SRC_DIR
 
       - echo "Creating artifact directories"
       - mkdir -p artifacts/glue artifacts/lambda
 
       - echo "Copying Glue job"
-      - cp glue/jobs/sample_glue_job.py artifacts/glue/
+      - cp $CODEBUILD_SRC_DIR/glue/jobs/sample_glue_job.py artifacts/glue/
 
       - echo "Zipping Lambda code"
-      - zip -j artifacts/lambda/sample_lambda.zip lambda/functions/sample_lambda.py
+      - zip -j artifacts/lambda/sample_lambda.zip $CODEBUILD_SRC_DIR/lambda/functions/sample_lambda.py
 
 artifacts:
   base-directory: artifacts
