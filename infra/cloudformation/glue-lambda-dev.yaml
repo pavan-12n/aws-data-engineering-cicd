@@ -2,7 +2,6 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Glue and Lambda resources for DEV environment
 
 Resources:
-
   DevGlueJob:
     Type: AWS::Glue::Job
     Properties:
