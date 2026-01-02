@@ -3,4 +3,20 @@ version: 0.2
 phases:
   build:
     commands:
-      - echo "hello from codebuild"
+      - echo "Starting build phase"
+      - pwd
+      - ls -R
+
+      - echo "Creating artifact directories"
+      - mkdir -p artifacts/glue artifacts/lambda
+
+      - echo "Copying Glue job"
+      - cp glue/jobs/sample_glue_job.py artifacts/glue/
+
+      - echo "Packaging Lambda"
+      - zip -j artifacts/lambda/sample_lambda.zip lambda/functions/sample_lambda.py
+
+artifacts:
+  base-directory: artifacts
+  files:
+    - "**/*"
