@@ -3,33 +3,25 @@ version: 0.2
 phases:
   build:
     commands:
-      - echo "=== CODEBUILD SRC DIR ==="
-      - echo $CODEBUILD_SRC_DIR
-
-      - echo "=== FULL DIRECTORY TREE ==="
+      - echo "PWD:"
+      - pwd
+      - echo "LIST ALL FILES:"
       - ls -R
 
-      - echo "Creating artifact directories"
       - mkdir -p artifacts/glue artifacts/lambda
 
-      - echo "Searching for Glue job"
+      - echo "Finding Glue job"
       - |
-        GLUE_FILE=$(find . -type f -name "sample_glue_job.py" | head -n 1)
-        if [ -z "$GLUE_FILE" ]; then
-          echo "ERROR: Glue job not found"
-          exit 1
-        fi
-        echo "Glue file found at: $GLUE_FILE"
+        find . -name "sample_glue_job.py"
+        GLUE_FILE=$(find . -name "sample_glue_job.py" | head -n 1)
+        [ -z "$GLUE_FILE" ] && echo "Glue not found" && exit 1
         cp "$GLUE_FILE" artifacts/glue/
 
-      - echo "Searching for Lambda file"
+      - echo "Finding Lambda job"
       - |
-        LAMBDA_FILE=$(find . -type f -name "sample_lambda.py" | head -n 1)
-        if [ -z "$LAMBDA_FILE" ]; then
-          echo "ERROR: Lambda file not found"
-          exit 1
-        fi
-        echo "Lambda file found at: $LAMBDA_FILE"
+        find . -name "sample_lambda.py"
+        LAMBDA_FILE=$(find . -name "sample_lambda.py" | head -n 1)
+        [ -z "$LAMBDA_FILE" ] && echo "Lambda not found" && exit 1
         zip -j artifacts/lambda/sample_lambda.zip "$LAMBDA_FILE"
 
 artifacts:
