@@ -1,13 +1,14 @@
 version: 0.2
 
 phases:
+  install:
+    commands:
+      - echo "Install phase - nothing to install"
   build:
     commands:
-      - echo "=== CURRENT DIRECTORY ==="
-      - pwd
+      - echo "Build phase successful"
+      - echo "No deployment performed by CodePipeline"
 
-      - echo "=== FULL FILE TREE ==="
-      - ls -R
-
-      - echo "=== SEARCHING FOR GLUE FILE ==="
-      - find . -name "sample_glue_job.py"
+artifacts:
+  files:
+    - "**/*"
