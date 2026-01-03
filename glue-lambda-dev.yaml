@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Glue Job and Lambda for Data Engineering CI/CD (Dev)
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+
+Resources:
+  ### IAM ROLE FOR GLUE ###
+  GlueJobRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub glue-job-role-${Environment}
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: glue.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  ### GLUE JOB ###
+  GlueJob:
+    Type: AWS::Glue::Job
+    Properties:
+      Name: !Sub sample-glue-job-${Environment}
+      Role: !GetAtt GlueJobRole.Arn
+      Command:
+        Name: glueetl
+        PythonVersion: "3"
+        ScriptLocation: s3://aws-data-engineering-ci-artifacts/aws-data-engineering-ci/artifacts/glue/sample_glue_job.py
+      DefaultArguments:
+        "--job-language": "python"
+      GlueVersion: "3.0"
+      MaxRetries: 0
+      NumberOfWorkers: 2
+      WorkerType: G.1X
+
+  ### IAM ROLE FOR LAMBDA ###
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub lambda-exec-role-${Environment}
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  ### LAMBDA FUNCTION ###
+  SampleLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub sample-lambda-${Environment}
+      Runtime: python3.9
+      Handler: sample_lambda.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 60
+      Code:
+        S3Bucket: aws-data-engineering-ci-artifacts
+        S3Key: aws-data-engineering-ci/artifacts/lambda/sample_lambda.zip
+
+Outputs:
+  GlueJobName:
+    Description: Glue Job Name
+    Value: !Ref GlueJob
+
+  LambdaFunctionName:
+    Description: Lambda Function Name
+    Value: !Ref SampleLambda
